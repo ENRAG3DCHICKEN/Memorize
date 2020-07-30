@@ -14,17 +14,23 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
         
     var body: some View {
-        Grid(viewModel.cards) { card in
-            CardView(card: card).onTapGesture {
-                self.viewModel.choose(card: card)
+    
+        Group {
+            Text("New Game").onTapGesture{
+                self.viewModel.startNewGame(themeName: Theme.themeName, emojis: Theme.emojis, randomPairs: Theme.randomPairs)
             }
-        .padding(5)
+            Grid(viewModel.cards) { card in
+                CardView(card: card).onTapGesture {
+                    self.viewModel.choose(card: card)
+                }
+                .padding(5)
+            }
+            Text(viewModel.modelThemeName)
         }
             .foregroundColor(Color.orange)
             .padding()
             //.aspectRatio(0.67, contentMode: .fit)
     }
-}
 	
 struct CardView: View {
     var card: MemoryGame<String>.Card
@@ -60,5 +66,5 @@ struct CardView: View {
 }
 
 
-
+}
 

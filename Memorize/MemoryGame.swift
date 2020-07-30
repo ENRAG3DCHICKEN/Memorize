@@ -10,6 +10,7 @@ import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     var cards: Array<Card>
+    var currentThemeName: String
     
     var indexOfTheOneAndOnlyFaceUpCard: Int? {
         //The following code can also be simplified using "filter"
@@ -52,8 +53,21 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
-    init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+    mutating func startNewGame(themeName: String, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+        currentThemeName = themeName
+        
+        cards.removeAll()
+        for pairIndex in 0..<numberOfPairsOfCards {
+            let content = cardContentFactory(pairIndex)
+            cards.append(Card(content: content, id: pairIndex*2))
+            cards.append(Card(content: content, id: pairIndex*2+1))
+        }
+    }
+    
+    init(themeName: String, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
         cards = Array<Card>()
+        currentThemeName = themeName
+        
         for pairIndex in 0..<numberOfPairsOfCards {
             let content = cardContentFactory(pairIndex)
             cards.append(Card(content: content, id: pairIndex*2))
@@ -68,5 +82,9 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         var content: CardContent
         var id: Int
     }
+    
+    
+
 }
  
+
