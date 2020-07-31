@@ -19,8 +19,6 @@ import SwiftUI
         ["names":"Food", "emojis": ["🍏","🥑","🥦","🥐","🌭"], "numberOfCards": 5]
         ]
      
-    
-    
     static var randomInteger = Int.random(in: 0..<themes.count)
     static var themeName: String = themes[randomInteger]["names"] as! String
     static var emojis: Array<String> = themes[randomInteger]["emojis"]  as! [String]
@@ -64,6 +62,10 @@ import SwiftUI
     var modelThemeName: String {
             return model.currentThemeName
         }
+    
+    var modelScore: String {
+        return String(model.score)
+    }
 }
     
     

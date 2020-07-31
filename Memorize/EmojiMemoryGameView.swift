@@ -17,9 +17,9 @@ struct EmojiMemoryGameView: View {
     
         Group {
             Text("New Game").onTapGesture{
-                //self.viewModel.startNewGame(themeName: Theme.themeName, emojis: Theme.emojis, randomPairs: Theme.randomPairs)
                 self.viewModel.startNewGame()
             }
+            Text(viewModel.modelScore)
             Grid(viewModel.cards) { card in
                 CardView(card: card).onTapGesture {
                     self.viewModel.choose(card: card)

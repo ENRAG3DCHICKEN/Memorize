@@ -9,6 +9,7 @@
 import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
+    var score: Int
     var cards: Array<Card>
     var currentThemeName: String
     
@@ -40,13 +41,29 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     
     mutating func choose(card: Card) {
         print("card chose: \(card)")
+        
         if let chosenIndex: Int = cards.firstIndex(matching: card), !cards[chosenIndex].isFaceUp, !cards[chosenIndex].isMatched {
+            
             if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+                
                 if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                     cards[chosenIndex].isMatched = true
                     cards[potentialMatchIndex].isMatched = true
+                    score += 2
                 }
+                else if cards[chosenIndex].content != cards[potentialMatchIndex].content {
+                    if cards[chosenIndex].isSeen {
+                        score -= 1
+                    }
+                    if cards[potentialMatchIndex].isSeen{
+                        score -= 1
+                    }
+                    cards[chosenIndex].isSeen = true
+                    cards[potentialMatchIndex].isSeen = true
+                }
+                
                 self.cards[chosenIndex].isFaceUp = true
+                
             } else {
                 indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
@@ -54,6 +71,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     mutating func startNewGame(themeName: String, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+        score = 0
         currentThemeName = themeName
         
         cards.removeAll()
@@ -63,9 +81,11 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             cards.append(Card(content: content, id: pairIndex*2+1))
         }
         cards.shuffle()
+        
     }
     
     init(themeName: String, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+        score = 0
         cards = Array<Card>()
         currentThemeName = themeName
         
@@ -75,14 +95,17 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             cards.append(Card(content: content, id: pairIndex*2+1))
         }
         cards.shuffle()
+        
     }
     
     struct Card: Identifiable {
         var isFaceUp: Bool = false
         var isMatched: Bool = false
+        var isSeen: Bool = false
         var content: CardContent
         var id: Int
     }
+    
     
     
 
