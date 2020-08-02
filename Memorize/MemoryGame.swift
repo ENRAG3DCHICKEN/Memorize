@@ -10,10 +10,10 @@ import Foundation
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     var score: Int
-    var cards: Array<Card>
+    private(set) var cards: Array<Card>
     var currentThemeName: String
     
-    var indexOfTheOneAndOnlyFaceUpCard: Int? {
+    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         //The following code can also be simplified using "filter"
         get {
             var faceUpCardIndices = [Int]()
