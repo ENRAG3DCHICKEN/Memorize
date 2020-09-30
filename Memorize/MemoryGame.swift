@@ -7,11 +7,41 @@
 //
 
 import Foundation
+import UIKit
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
     var score: Int
+    
+    
+    //Elements below depend on other items before init'd first
+    struct Theme: Encodable {
+        let themeName: String
+        let themeCardPairs: Int
+        let cardContents: [String]
+        let themeColor: UIColor.RGB
+        
+        fileprivate init(themeName: String, themeCardPairs: Int, cardContents: [String], themeColor: UIColor) {
+            self.themeName = themeName
+            self.themeCardPairs = themeCardPairs
+            self.cardContents = cardContents
+            self.themeColor = themeColor.rgb
+        }
+        
+        var json: Data? {
+            return try? JSONEncoder().encode(self)
+        }
+        
+        func printJSON() {
+            print("json = \(self.json?.utf8 ?? "nil")")
+        }
+    }
+    
+
     private(set) var cards: Array<Card>
     var currentThemeName: String
+    var currentThemeColor: UIColor
+    var currentThemeNumberOfPairs: Int
+    var currentCardContents: [String] = []
     
     private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         //The following code can also be simplified using "filter"
@@ -70,45 +100,114 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         }
     }
     
-    mutating func startNewGame(themeName: String, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+    mutating func startNewGame(themeName: String, numberOfPairsOfCards: Int, themeColor: UIColor, cardContentFactory: (Int) -> CardContent) {
         score = 0
         currentThemeName = themeName
+        currentThemeColor = themeColor
+        currentThemeNumberOfPairs = numberOfPairsOfCards
         
         cards.removeAll()
+        currentCardContents.removeAll()
+        
         for pairIndex in 0..<numberOfPairsOfCards {
             let content = cardContentFactory(pairIndex)
             cards.append(Card(content: content, id: pairIndex*2))
             cards.append(Card(content: content, id: pairIndex*2+1))
+            
+            currentCardContents.append(content as! String)
         }
         cards.shuffle()
         
+        let themeItem = Theme(themeName: themeName, themeCardPairs: numberOfPairsOfCards, cardContents: currentCardContents, themeColor: themeColor)
+        themeItem.printJSON()
     }
     
-    init(themeName: String, numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+    init(themeName: String, numberOfPairsOfCards: Int, themeColor: UIColor, cardContentFactory: (Int) -> CardContent) {
+    
+
+        
         score = 0
         cards = Array<Card>()
         currentThemeName = themeName
+        currentThemeColor = themeColor
+        currentThemeNumberOfPairs = numberOfPairsOfCards
+        
         
         for pairIndex in 0..<numberOfPairsOfCards {
             let content = cardContentFactory(pairIndex)
             cards.append(Card(content: content, id: pairIndex*2))
             cards.append(Card(content: content, id: pairIndex*2+1))
+            
+            currentCardContents.append(content as! String)
         }
         cards.shuffle()
         
+        let themeItem = Theme(themeName: themeName, themeCardPairs: numberOfPairsOfCards, cardContents: currentCardContents, themeColor: themeColor)
+        themeItem.printJSON()
     }
     
     struct Card: Identifiable {
-        var isFaceUp: Bool = false
-        var isMatched: Bool = false
+        
+        //Property Observers
+        var isFaceUp: Bool = false {
+            didSet {
+                if isFaceUp {
+                    startUsingBonusTime()
+                } else {
+                    stopUsingBonusTime()
+                }}}
+        
+        var isMatched: Bool = false {
+            didSet {
+                stopUsingBonusTime()
+            }}
+        
         var isSeen: Bool = false
         var content: CardContent
         var id: Int
+    
+        // MARK: - Bonus Time
+        var bonusTimeLimit: TimeInterval = 6
+        
+        private var faceUpTime: TimeInterval {
+            if let lastFaceUpDate = self.lastFaceUpDate {
+                return pastFaceUpTime + Date().timeIntervalSince(lastFaceUpDate)
+            } else {
+                return pastFaceUpTime
+            }
+        }
+        
+        var lastFaceUpDate: Date?
+        
+        var pastFaceUpTime: TimeInterval = 0
+        
+        var bonusTimeRemaining: TimeInterval {
+            max(0, bonusTimeLimit - faceUpTime)
+        }
+        
+        var bonusRemaining: Double {
+            (bonusTimeLimit > 0 && bonusTimeRemaining > 0) ? bonusTimeRemaining/bonusTimeLimit : 0
+        }
+        
+        var hasEarnedBonus: Bool {
+            isMatched && bonusTimeRemaining > 0
+        }
+        
+        var isConsumingBonusTime: Bool {
+            isFaceUp && !isMatched && bonusTimeRemaining > 0
+        }
+        
+        private mutating func startUsingBonusTime() {
+            if isConsumingBonusTime, lastFaceUpDate == nil {
+                lastFaceUpDate = Date()
+            }
+        }
+        
+        private mutating func stopUsingBonusTime() {
+            pastFaceUpTime = faceUpTime
+            self.lastFaceUpDate = nil
+        }
     }
-    
-    
-    
-
 }
  
 
