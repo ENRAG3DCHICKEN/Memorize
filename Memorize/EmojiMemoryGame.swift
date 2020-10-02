@@ -45,8 +45,17 @@ struct themes {
 }
      
  class EmojiMemoryGame: ObservableObject {
-    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame(themeName: themes.selectedTheme.name, emojis: themes.selectedTheme.emojis, randomPairs: themes.selectedTheme.numberOfCards!, colors: themes.selectedTheme.color)
-        
+    
+    @Published private var model: MemoryGame<String>
+    
+    init(theme: Theme) {
+        model = EmojiMemoryGame.createMemoryGame(themeName: theme.name, emojis: theme.emojis, randomPairs: theme.numberOfCards!, colors: theme.color)
+    }
+    
+    init() {
+        model = EmojiMemoryGame.createMemoryGame(themeName: themes.selectedTheme.name, emojis: themes.selectedTheme.emojis, randomPairs: themes.selectedTheme.numberOfCards!, colors: themes.selectedTheme.color)
+    }
+    
     private static func createMemoryGame(themeName: String, emojis: [String], randomPairs: Int, colors: UIColor) -> MemoryGame<String> {
 
         return MemoryGame<String>(themeName: themeName, numberOfPairsOfCards: randomPairs, themeColor: colors, cardContentFactory: { (pairIndex: Int) -> String in
