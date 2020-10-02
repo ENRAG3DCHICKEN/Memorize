@@ -7,18 +7,28 @@
 //
 
 import SwiftUI
-
-struct themeChooser: View {
-    
-    
-    var body: some View {
-
-    
-
-    }
-}
-
-
-
-
-
+//
+//struct themeChooser: View {
+//
+//
+//
+//    var body: some View {
+//
+//        NavigationView {
+//            List {
+//                ForEach(themes.availableThemes) { theme in
+//                    NavigationLink("Hello World", destination: EmojiMemoryGameView(viewModel: EmojiMemoryGame()))
+//                }
+//                        .navigationBarTitle(Theme.themes[index]["names"] as! String))
+//                }
+//
+//
+//
+//
+//
+//
+//
+//
+//    }}
+//
+//

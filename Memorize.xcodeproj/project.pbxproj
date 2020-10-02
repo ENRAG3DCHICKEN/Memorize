@@ -23,6 +23,7 @@
 		7320BF3C25240F73009CAA58 /* themeChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7320BF3B25240F73009CAA58 /* themeChooser.swift */; };
 		73B4A90024D5F9B800BCF9A0 /* Pie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4A8FF24D5F9B800BCF9A0 /* Pie.swift */; };
 		73B4A90224D6209200BCF9A0 /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B4A90124D6209200BCF9A0 /* Cardify.swift */; };
+		73FE05E02524D897003112C4 /* MemorizeThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FE05DF2524D897003112C4 /* MemorizeThemeStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		7320BF3B25240F73009CAA58 /* themeChooser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = themeChooser.swift; sourceTree = "<group>"; };
 		73B4A8FF24D5F9B800BCF9A0 /* Pie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pie.swift; sourceTree = "<group>"; };
 		73B4A90124D6209200BCF9A0 /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
+		73FE05DF2524D897003112C4 /* MemorizeThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemorizeThemeStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				488D79D224A82661009B16E8 /* AppDelegate.swift */,
 				488D79D424A82661009B16E8 /* SceneDelegate.swift */,
 				7320BF3B25240F73009CAA58 /* themeChooser.swift */,
+				73FE05DF2524D897003112C4 /* MemorizeThemeStore.swift */,
 				488D79D624A82661009B16E8 /* EmojiMemoryGameView.swift */,
 				73B4A90124D6209200BCF9A0 /* Cardify.swift */,
 				73B4A8FF24D5F9B800BCF9A0 /* Pie.swift */,
@@ -182,6 +185,7 @@
 				731B43DC251311A300672671 /* EmojiArtExtensions.swift in Sources */,
 				48DB246824A993BE008D7969 /* MemoryGame.swift in Sources */,
 				731B43DA25130C2700672671 /* UIColor+RGBA.swift in Sources */,
+				73FE05E02524D897003112C4 /* MemorizeThemeStore.swift in Sources */,
 				73B4A90024D5F9B800BCF9A0 /* Pie.swift in Sources */,
 				488D79D724A82661009B16E8 /* EmojiMemoryGameView.swift in Sources */,
 				48DB246A24A99659008D7969 /* EmojiMemoryGame.swift in Sources */,

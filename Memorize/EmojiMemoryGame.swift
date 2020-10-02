@@ -8,28 +8,44 @@
 
 import SwiftUI
  
- class Theme {
- 
-    static var themes: [Dictionary<String, Any>] = [
-        ["names":"Halloween", "emojis": ["👻","🎃","🕷","☠️","👽"], "numberOfCards": 5, "colors" : UIColor.systemOrange],
-        ["names":"Faces", "emojis": ["😀","😍","☹️","😎","😇"], "numberOfCards": 5, "colors" : UIColor.systemYellow],
-        ["names":"Sports", "emojis": ["⚽️","🏈","🥎","🎱","🏓"], "numberOfCards": 5, "colors" : UIColor.systemGreen],
-        ["names":"Animals", "emojis": ["🦄","🐧","🐼","🙀","🦊"], "numberOfCards": 5, "colors" : UIColor.systemTeal],
-        ["names":"Hearts", "emojis": ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎"], "colors" : UIColor.systemRed],
-        ["names":"Food", "emojis": ["🍏","🥑","🥦","🥐","🌭"], "numberOfCards": 5, "colors" : UIColor.systemBlue]
+struct Theme: Identifiable {
+    
+    var id: UUID
+
+    var name: String
+    var emojis: [String]
+    var numberOfCards: Int? = nil
+    var color: UIColor
+    
+    init (name: String, emojis: [String], numberOfCards: Int? = nil, color: UIColor) {
+        self.name = name
+        self.emojis = emojis
+        self.numberOfCards = numberOfCards
+        self.color = color
+        self.id = UUID()
+    }
+}
+    
+    
+        
+  
+struct themes {
+        
+    static var availableThemes: [Theme] = [
+        Theme(name: "Halloween", emojis: ["👻","🎃","🕷","☠️","👽"], numberOfCards: 5, color: UIColor.systemOrange),
+        Theme(name: "Faces", emojis: ["😀","😍","☹️","😎","😇"], numberOfCards: 5, color: UIColor.systemYellow),
+        Theme(name: "Sports", emojis: ["⚽️","🏈","🥎","🎱","🏓"], numberOfCards: 5, color: UIColor.systemGreen),
+        Theme(name: "Animals", emojis: ["🦄","🐧","🐼","🙀","🦊"], numberOfCards: 5, color: UIColor.systemTeal),
+        Theme(name: "Hearts", emojis: ["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎"], numberOfCards: 9, color: UIColor.systemRed),
+        Theme(name: "Food", emojis: ["🍏","🥑","🥦","🥐","🌭"], numberOfCards: 5, color: UIColor.systemBlue)
     ]
-     
-    static var randomInteger = Int.random(in: 0..<themes.count)
-    static var themeName: String = themes[randomInteger]["names"] as! String
-    static var emojis: Array<String> = themes[randomInteger]["emojis"]  as! [String]
-    static var randomPairs = themes[randomInteger]["numberOfCards"] as? Int ?? emojis.count
-    
-    static var themeColor = themes[randomInteger]["colors"] as! UIColor
-    
- }
+
+    static var selectedTheme: Theme = availableThemes[Int.random(in: 0..<availableThemes.count)]
  
+}
+     
  class EmojiMemoryGame: ObservableObject {
-    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame(themeName: Theme.themeName, emojis: Theme.emojis, randomPairs: Theme.randomPairs, colors: Theme.themeColor)
+    @Published private var model: MemoryGame<String> = EmojiMemoryGame.createMemoryGame(themeName: themes.selectedTheme.name, emojis: themes.selectedTheme.emojis, randomPairs: themes.selectedTheme.numberOfCards!, colors: themes.selectedTheme.color)
         
     private static func createMemoryGame(themeName: String, emojis: [String], randomPairs: Int, colors: UIColor) -> MemoryGame<String> {
 
@@ -51,14 +67,10 @@ import SwiftUI
         
     func startNewGame() {
         
-        Theme.randomInteger = Int.random(in: 0..<Theme.themes.count)
-        Theme.themeName = Theme.themes[Theme.randomInteger]["names"] as! String
-        Theme.emojis = Theme.themes[Theme.randomInteger]["emojis"]  as! [String]
-        Theme.randomPairs = Theme.themes[Theme.randomInteger]["numberOfCards"] as? Int ?? Theme.emojis.count
-        Theme.themeColor = Theme.themes[Theme.randomInteger]["colors"] as! UIColor
+        themes.selectedTheme = themes.availableThemes[Int.random(in: 0..<themes.availableThemes.count)]
         
-        model.startNewGame(themeName: Theme.themeName, numberOfPairsOfCards: Theme.randomPairs, themeColor: Theme.themeColor, cardContentFactory: { (pairIndex: Int) -> String in
-            return Theme.emojis[pairIndex]
+        model.startNewGame(themeName: themes.selectedTheme.name, numberOfPairsOfCards: themes.selectedTheme.numberOfCards!, themeColor: themes.selectedTheme.color, cardContentFactory: { (pairIndex: Int) -> String in
+            return themes.selectedTheme.emojis[pairIndex]
         })
     }
         
@@ -74,4 +86,5 @@ import SwiftUI
         return String(model.score)
     }
 }
+     
     
